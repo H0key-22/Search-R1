@@ -1,6 +1,6 @@
 
-corpus_file=/root/corpus/wiki_corpus.jsonl # jsonl
-save_dir=/root/corpus/index
+corpus_file=/datadisk/corpus/wiki_corpus.jsonl # jsonl
+save_dir=/datadisk/corpus/index
 retriever_name=e5 # this is for indexing naming
 retriever_model=intfloat/e5-base-v2
 

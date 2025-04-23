@@ -1,13 +1,13 @@
 
 # DATA_NAME=claim
 
-DATASET_PATH="/root/data/"
+DATASET_PATH="/datadisk/"
 
 SPLIT='train'
 TOPK=3
 
-INDEX_PATH=/root/data/corpus/index/
-CORPUS_PATH=/root/data/corpus/wiki_corpus.jsonl
+INDEX_PATH=/datadisk/corpus/index/
+CORPUS_PATH=/datadisk/corpus/wiki_corpus.jsonl
 SAVE_NAME=e5_${TOPK}.json
 
 # INDEX_PATH=/home/peterjin/rm_retrieval_corpus/index/wiki-21
