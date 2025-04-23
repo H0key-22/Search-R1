@@ -45,7 +45,7 @@ def extract_solution(solution_str):
     return label, evid_ids
 
 
-def compute_reward(solution_str, ground_truth):
+def compute_reward(solution_str, ground_truth, format_score=0.):
     """
     Compute combined reward:
       - label_reward: 1 if predicted label matches ground_truth['label'], else 0
