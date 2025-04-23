@@ -1,8 +1,7 @@
-
 corpus_file=/datadisk/corpus/wiki_corpus.jsonl # jsonl
 save_dir=/datadisk/corpus/index
 retriever_name=e5 # this is for indexing naming
-retriever_model=intfloat/e5-base-v2
+retriever_model=/datadisk/model/e5
 
 # change faiss_type to HNSW32/64/128 for ANN indexing
 # change retriever_name to bm25 for BM25 indexing

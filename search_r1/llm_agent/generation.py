@@ -456,14 +456,45 @@ If I want to give the final answer, I should put the answer between <answer> and
         }
         
         return requests.post(self.config.search_url, json=payload).json()
-
+    
     def _passages2string(self, retrieval_result):
+        """
+            将检索结果转换为格式化字符串：
+            - 提取 id 和 text 字段
+            - 去除 text 中的标题行
+            - 按 [SEP] 分割为若干句子
+            - 组合为 [[<id>_sentence_<i>]]:<句子> 的形式
+        """
         format_reference = ''
-        for idx, doc_item in enumerate(retrieval_result):
-            
-            content = doc_item['document']['contents']
-            title = content.split("\n")[0]
-            text = "\n".join(content.split("\n")[1:])
-            format_reference += f"Doc {idx+1}(Title: {title}) {text}\n"
+        for doc_item in retrieval_result:
+            # 1. 提取 id 和原始文本
+            doc_id = doc_item['id']
+            raw_text = doc_item['text']
+
+            # 2. 去除标题部分：形如 "<title>"\n 的首行
+            lines = raw_text.split('\n', 1)
+            if len(lines) == 2 and lines[0].startswith('"') and lines[0].endswith('"'):
+                text_body = lines[1]
+            else:
+                text_body = raw_text
+
+            # 3. 按 [SEP] 分割为句子，并去除前后空白
+            sentences = [seg.strip() for seg in text_body.split('[SEP]') if seg.strip()]
+
+            # 4. 组合 id 和句子
+            for idx, sentence in enumerate(sentences):
+                format_reference += f"[[{doc_id}_sentence_{idx}]]:{sentence}\n"
 
         return format_reference
+
+
+    # def _passages2string(self, retrieval_result):
+    #     format_reference = ''
+    #     for idx, doc_item in enumerate(retrieval_result):
+            
+    #         content = doc_item['document']['contents']
+    #         title = content.split("\n")[0]
+    #         text = "\n".join(content.split("\n")[1:])
+    #         format_reference += f"Doc {idx+1}(Title: {title}) {text}\n"
+
+    #     return format_reference
