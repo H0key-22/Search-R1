@@ -49,6 +49,7 @@ class RewardManager():
             return data.batch['rm_scores']
 
         reward_tensor = torch.zeros_like(data.batch['responses'], dtype=torch.float32)
+        acc_tensor    = torch.zeros_like(data.batch['responses'], dtype=torch.float32)
 
         # all_scores = []
 
@@ -78,9 +79,10 @@ class RewardManager():
             data_source = data_item.non_tensor_batch['data_source']
             compute_score_fn = _select_rm_score_fn(data_source)
 
-            score = compute_score_fn(solution_str=sequences_str, ground_truth=ground_truth, format_score=self.format_score)
+            score, acc = compute_score_fn(solution_str=sequences_str, ground_truth=ground_truth, format_score=self.format_score)
 
             reward_tensor[i, valid_response_length - 1] = score
+            acc_tensor   [i, valid_response_length - 1] = acc
             # all_scores.append(score)
 
             if data_source not in already_print_data_sources:
@@ -96,6 +98,8 @@ class RewardManager():
         # print(f"[DEBUG] all_scores max: {np.max(all_scores)}")
         # print(f"[DEBUG] all_scores min: {np.min(all_scores)}")
         # print(f"[DEBUG] all_scores std: {np.std(all_scores)}")
+
+        data.batch['token_level_accs'] = acc_tensor
 
         return reward_tensor
 

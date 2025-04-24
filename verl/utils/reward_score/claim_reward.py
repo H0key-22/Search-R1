@@ -71,4 +71,4 @@ def compute_reward(solution_str, ground_truth, format_score=0.):
         if union:
             evidence_reward = len(intersection) / len(union)
 
-    return label_reward + evidence_reward
+    return label_reward + evidence_reward, label_reward

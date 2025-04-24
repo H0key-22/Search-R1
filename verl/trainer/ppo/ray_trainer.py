@@ -180,6 +180,7 @@ def compute_data_metrics(batch, use_critic=True):
     # TODO: add response length
     sequence_score = batch.batch['token_level_scores'].sum(-1)
     sequence_reward = batch.batch['token_level_rewards'].sum(-1)
+    sequence_acc = batch.batch['token_level_accs'].sum(-1)
 
     advantages = batch.batch['advantages']
     returns = batch.batch['returns']
@@ -219,6 +220,10 @@ def compute_data_metrics(batch, use_critic=True):
             torch.max(sequence_reward).detach().item(),
         'critic/rewards/min':
             torch.min(sequence_reward).detach().item(),
+        # acc
++       'critic/acc/mean': torch.mean(sequence_acc).detach().item(),
++       'critic/acc/max':  torch.max(sequence_acc).detach().item(),
++       'critic/acc/min':  torch.min(sequence_acc).detach().item(),
         # adv
         'critic/advantages/mean':
             torch.mean(valid_adv).detach().item(),

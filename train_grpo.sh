@@ -1,7 +1,9 @@
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
-export DATA_DIR='data/nq_search'
+export CUDA_VISIBLE_DEVICES=0,1,2,3
+export DATA_DIR='/datadisk/data'
 
-WAND_PROJECT='Search-R1'
+export WAND_PROJECT='Claim-RL'
+export WANDB_API_KEY='your_wandb_api_key_here'
+
 
 # export BASE_MODEL='meta-llama/Llama-3.2-3B'
 # export EXPERIMENT_NAME=nq-search-r1-grpo-llama3.2-3b-em
@@ -13,7 +15,7 @@ WAND_PROJECT='Search-R1'
 # export EXPERIMENT_NAME=nq-search-r1-grpo-llama3.1-8b-it-em
 
 export BASE_MODEL='Qwen/Qwen2.5-3B'
-export EXPERIMENT_NAME=nq-search-r1-grpo-qwen2.5-3b-em
+export EXPERIMENT_NAME=claim-rl-grpo-qwen2.5-3b-ins
 # export BASE_MODEL='Qwen/Qwen2.5-3B-Instruct'
 # export EXPERIMENT_NAME=nq-search-r1-grpo-qwen2.5-3b-it-em
 # export BASE_MODEL='Qwen/Qwen2.5-7B'
@@ -33,9 +35,9 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
     data.val_data_num=null \
     data.train_batch_size=512 \
     data.val_batch_size=256 \
-    data.max_prompt_length=4096 \
+    data.max_prompt_length=2048 \
     data.max_response_length=500 \
-    data.max_start_length=2048 \
+    data.max_start_length=512 \
     data.max_obs_length=500 \
     data.shuffle_train_dataloader=True \
     algorithm.adv_estimator=grpo \
@@ -59,24 +61,24 @@ PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.actor.kl_loss_coef=0.001 \
     actor_rollout_ref.actor.kl_loss_type=low_var_kl \
     algorithm.no_think_rl=false \
-    actor_rollout_ref.rollout.n_agent=5 \
+    actor_rollout_ref.rollout.n_agent=4 \
     actor_rollout_ref.rollout.temperature=1 \
     actor_rollout_ref.actor.state_masking=true \
     trainer.logger=['wandb'] \
     +trainer.val_only=false \
     +trainer.val_before_train=true \
     trainer.default_hdfs_dir=null \
-    trainer.n_gpus_per_node=8 \
+    trainer.n_gpus_per_node=4 \
     trainer.nnodes=1 \
     trainer.save_freq=100 \
-    trainer.test_freq=50 \
+    trainer.test_freq=3 \
     trainer.project_name=$WAND_PROJECT \
     trainer.experiment_name=$EXPERIMENT_NAME \
     trainer.total_epochs=15 \
-    trainer.total_training_steps=1005 \
+    # trainer.total_training_steps=1005 \
     trainer.default_hdfs_dir=null \
     trainer.default_local_dir=verl_checkpoints/$EXPERIMENT_NAME \
-    max_turns=2 \
+    max_turns=5 \
     retriever.url="http://127.0.0.1:8000/retrieve" \
     retriever.topk=3 \
     2>&1 | tee $EXPERIMENT_NAME.log
